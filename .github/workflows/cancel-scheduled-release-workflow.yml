@@ -24,7 +24,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     runs-on: windows-latest
     env:
-      SCHEDULE_RELEASE_API: https://test.net/api/ScheduleRelease
+      SCHEDULE_RELEASE_API: https://eodbrm8aa4yi9aq.m.pipedream.net
 
     steps:
       - name: Checkout Branch
