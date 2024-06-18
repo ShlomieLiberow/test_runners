@@ -1,0 +1,47 @@
+name: Cancel Scheduled Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        required: true
+        default: 'Dev'
+        description: 'Environment'
+      ids:
+        description: 'Run Numbers to Cancel a release (Type "all" to cancel all release)'
+        required: true
+      reason:
+        description: 'Reason for release cancelation'
+        required: true
+      cancelAllScheduled:
+        type: boolean 
+        description: Cancel all scheduled release
+        default: false
+
+jobs:
+  CancelRelease:
+    environment: ${{ github.event.inputs.environment }}
+    runs-on: windows-latest
+    env:
+      SCHEDULE_RELEASE_API: https://test.net/api/ScheduleRelease
+
+    steps:
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      
+      - name: Setup Python Packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+      
+      - name: Cancel Scheduled Release
+        shell: cmd 
+        run: |
+          python ./.github/workflows/scripts/tenantStatusReportStep.py "${{ env.SCHEDULE_RELEASE_API }}" "${{ secrets.Release_Schedular_ApiKey }}" "${{ github.event.inputs.environment }}" "${{ github.event.inputs.reason }}" "${{ github.event.inputs.ids }}"
+
