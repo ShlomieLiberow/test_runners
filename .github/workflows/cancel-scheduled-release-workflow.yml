@@ -43,5 +43,5 @@ jobs:
       - name: Cancel Scheduled Release
         shell: cmd 
         run: |
-          "whoami"
+          python ./.github/workflows/scripts/cancelScheduleReleaseStep.py "${{ env.SCHEDULE_RELEASE_API }}" "${{ secrets.Release_Schedular_ApiKey }}" "${{ github.event.inputs.environment }}" "${{ github.event.inputs.reason }}" "${{ github.event.inputs.ids }}"
 
