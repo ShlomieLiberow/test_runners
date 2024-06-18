@@ -54,7 +54,7 @@ jobs:
       - name: Create Report
         shell: cmd 
         run: |
-          python ./.github/workflows/scripts/tenantStatusReportStep.py "${{ github.event.inputs.tz }}" "${{ github.event.inputs.environment }}" "${{ runner.temp }}\\tenant-status-report.html"
+          python "${{ github.event.inputs.tz }}" "${{ github.event.inputs.environment }}" "${{ runner.temp }}\\tenant-status-report.html"
 
       - name: Compute Report Name
         shell: pwsh
