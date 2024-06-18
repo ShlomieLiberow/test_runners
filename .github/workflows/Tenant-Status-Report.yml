@@ -1,0 +1,70 @@
+name: Tenant Status Report
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: environment
+        required: true
+        default: 'Dev'
+        description: 'Environment'
+      tz:
+        type: choice
+        description: 'Timezone'
+        default: US/Eastern
+        options:
+        - US/Alaska
+        - US/Aleutian
+        - US/Arizona
+        - US/Central
+        - US/East-Indiana
+        - US/Eastern
+        - US/Hawaii
+        - US/Indiana-Starke
+        - US/Michigan
+        - US/Mountain
+        - US/Pacific
+        - US/Samoa
+        - Asia/Kolkata
+
+
+jobs:
+  CreateTenantStatusReport:
+    environment: ${{ github.event.inputs.environment }}
+    runs-on: windows-latest
+    steps:
+      - name: Display Parameters
+        run: |
+          echo "Environment: ${{ github.event.inputs.environment }}" 
+          echo "Branch: ${{ github.ref }}" 
+          echo "Tomezone: ${{ github.event.inputs.tz }}"
+
+      - name: Checkout Branch
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      
+      - name: Setup Python Packages
+        run: |
+          python -m pip install --upgrade pip
+
+      - name: Create Report
+        shell: cmd 
+        run: |
+          python ./.github/workflows/scripts/tenantStatusReportStep.py "${{ github.event.inputs.tz }}" "${{ github.event.inputs.environment }}" "${{ runner.temp }}\\tenant-status-report.html"
+
+      - name: Compute Report Name
+        shell: pwsh
+        run: |
+            $current_date = Get-Date -Format "yyyy-MM-dd"
+            echo "report_name=Tenant-Status-Report-$current_date" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+            
+      - name: Upload Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.report_name }}
+          path: "${{ runner.temp }}\\tenant-status-report.html"
+          if-no-files-found: error
